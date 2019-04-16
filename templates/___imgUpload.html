@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Upload</title>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        <!--action="http://127.0.0.1:8000/predict/"-->
+        {% csrf_token %}
+        <input type="file" name="img"><br>
+        縱切幾塊<input type="text" name="a"><br>
+        橫切幾塊<input type="text" name="b"><br>
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>

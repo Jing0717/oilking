@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>展示圖片</title>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+         <input type="button" value="再上傳一次檔案" onclick="location.href='uploadImg/'">
+    </form>
+
+    <!--{% for i in results %}-->
+        <!--<p>{{ i }}</p>-->
+    <!--{% endfor %}-->
+    <!--{% for item in imgs %}-->
+        <!--<br><img src="{{ MEDIA_URL }}slices/{{item}}" ><br/>-->
+    <!--{% endfor %}-->
+
+    <img src="{{ img.img_origin.url }}", height="300" />
+    <p>[{{ img.img_origin.name }}] 分析結果:</p>
+
+    <!--{% for slice in slices %}-->
+        <!--<p>({{ slice.pos_x }},{{ slice.pos_y }}): {{ slice.results }}</p>-->
+        <!--<img src="{{ slice.img_slice.url }}", height="75">-->
+    <!--{% endfor %}-->
+
+
+    <hr>
+    <table>
+        {% for slice_row in slice_table %}
+        <tr>
+            <!--{{ slice_row }}-->
+            {% for slice in slice_row %}
+                <th>
+                <!--{{ slice.results }}-->
+                {% for result in slice.results %}
+                    {{ result }}
+                    <br>
+                {% endfor %}
+
+                <img src="{{ slice.img_slice.url }}", height="75">
+                </th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

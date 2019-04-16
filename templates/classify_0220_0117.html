@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Upload</title>
+</head>
+<body>
+<form action="/uploadImg/" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="img">
+  縱切<input type="number" value={{ nx }} name="a" min="1" max="15" step="1">
+  橫切<input type="number" value={{ ny }} name="b" min="1" max="15" step="1">
+  <input type="submit" value="上傳 / 原圖重切">
+</form>
+
+{% if show_origin %}
+<hr>
+<p>[{{ img.img_origin.name }}]</p>
+<!--<img src="{{ img.img_origin.url }}" height="300"/>-->
+<table>
+  {% for slice_row in slice_table %}
+  <tr>
+    {% for slice in slice_row %}
+    <th>
+      <img src="{{ slice.img_slice.url }}" height="{{ img.slice_height }}">
+    </th>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+<form action="/predict/" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="submit" value="預測">
+</form>
+{% endif %}
+
+{% if show_prediction %}
+<hr>
+<!--<table>-->
+<!--{% for slice_row in slice_table %}-->
+<!--<tr>-->
+<!--{% for slice in slice_row %}-->
+<!--<th>-->
+<!--{% for result in slice.results %}-->
+<!--{{ result }}-->
+<!--<br>-->
+<!--{% endfor %}-->
+<!---->
+<!--&lt;!&ndash;<img src="{{ slice.img_slice.url }}" height="75">&ndash;&gt;-->
+<!--</th>-->
+<!--{% endfor %}-->
+<!--</tr>-->
+<!--{% endfor %}-->
+<!--</table>-->
+
+<table>
+  <tr>
+    {% for label in labels %}
+      <th>{{ label }}</th>
+    {% endfor %}
+  </tr>
+  <tr>
+    {% for label_scores in labels_scores %}
+      <th>
+      <table>
+        {% for scores_row in label_scores %}
+        <tr>
+          {% for score in scores_row %}
+          <th>
+            {{ score }}
+          </th>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+    </th>
+    {% endfor %}
+  </tr>
+</table>
+
+{% endif %}
+
+</body>
+</html>

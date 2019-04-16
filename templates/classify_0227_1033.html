@@ -1,0 +1,235 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <img src="{% static "my_app/example.jpg" %}" alt="My image"> -->
+<meta charset="UTF-8">
+<title>上傳圖片</title>
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Custom Theme files -->
+<link href="{% static 'css/bootstrap.css' %}" rel='stylesheet' type='text/css' />  
+<link href="{% static 'css/style.css' %}" rel='stylesheet' type='text/css' />
+<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet"> 			<!-- font-awesome icons -->
+<!-- //Custom Theme files -->
+<!-- fonts -->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700' rel='stylesheet' type='text/css'>
+<!-- //fonts -->
+<!-- js -->
+<script src="{% static 'js/jquery-1.11.1.min.js' %}"> </script>	
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script type="{% static 'text/javascript' %}">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){		
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+</script>	 
+<script src="{% static 'js/menu_jquery.js' %}"></script> <!-- pop-up -->	
+<!-- //js -->
+</head>
+
+<body>
+<!-- header-top -->
+	<!-- header -->
+	<div class="header">
+		<!-- container -->
+		<div class="container">
+			<div class="header-bottom">
+				<div class="w3ls-logo">
+					<h1><a href="index.html">石油 <span>大王</span></a></h1>
+				</div>
+				<div class="header-top-right">
+					<!-- <form action="#" method="post">
+						<input type="text" name="Search" placeholder="Search" required=""> 
+						<input type="submit" value="">
+						<div class="clearfix"> </div>
+					</form> -->
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+			<div class="top-nav">
+				<nav class="navbar navbar-default">
+					<div class="container">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">Menu						
+						</button>
+					</div>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li class="home-icon"><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+							<li><a href="index.html" class="active">Home</a></li>
+							<li><a href="about.html">About</a></li>
+							<li><a href="#news" class="scroll">News</a></li>
+							<li><a href="gallery.html">Gallery</a></li>
+							<li><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li><a class="hvr-bounce-to-bottom" href="icons.html">Web Icons</a></li>
+									<li class="dropdown-submenu">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown-submenu" role="button" aria-haspopup="true" aria-expanded="false">Short Codes <span class="caret"></span></a>
+										<ul class="dropdown-menu">
+											<li><a tabindex="-1" href="codes.html">Navbar</a></li>
+											<li><a href="codes.html">Tabs</a></li>
+											 <li><a href="codes.html">Forms</a></li>
+										</ul>
+									</li>          
+								</ul>
+							</li>	 
+							<li><a href="contact.html">Contact</a></li>
+							<li class="login w3">
+								<div id="loginContainer"><a href="#" id="loginButton"><span>Login</span></a>
+									<div id="loginBox">      
+										<form id="loginForm" action="#" method="post">
+											<fieldset id="body">
+												<fieldset>
+													<label for="email">Email Address</label>
+													<input type="text" name="email" id="email" required="">
+												</fieldset>
+												<fieldset>
+													<label for="password">Password</label>
+													<input type="password" name="password" id="password" required="">
+												</fieldset>
+												<input type="submit" id="login" value="Sign in">
+												<label for="checkbox"><input type="checkbox" id="checkbox"> <i>Remember me</i></label>
+											</fieldset>
+											<span><a href="#">Forgot your password?</a></span>
+										</form>
+									</div>
+								</div>
+							</li>
+						</ul>	
+						<div class="clearfix"> </div>
+					</div>	
+				</nav>	
+			</div>
+		</div>
+		<!-- //container -->
+  </div>
+  <!-- welcome -->
+	<div class="welcome">
+      <!-- container -->
+      <!-- <div class="container">
+        <div class="welcome-info">
+          <h2 class="agileits-title">Welcome</h2>
+          <h5>Lorem ipsum dolor sit amet consectetur adipiscing elit.</h5>
+          <p>Morbi condimentum imperdiet placerat. Nullam in nisl eget turpis convallis venenatis. Cras cursus elementum justo nec bibendum. Donec quis nisi cursus, vestibulum elit eget, sagittis ligula.</p>
+        </div>
+      </div> -->
+      <div class="container">
+          <form action="/uploadImg/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="img">
+            縱切<input type="number" value={{ nx }} name="a" min="1" max="15" step="1">
+            橫切<input type="number" value={{ ny }} name="b" min="1" max="15" step="1">
+            <input type="submit" value="上傳 / 原圖重切">
+          </form>
+          
+          <!-- 如果有圖片可以顯示 -->
+          {% if show_image %}
+            {% if show_prediction %}
+              <hr>
+              <p>[{{ img.img_origin.name }}]</p>
+              <!--<img src="{{ img.img_origin.url }}" height="300"/>-->
+              <table class="table">
+              {% for slice_row in slice_table %}
+              <tr>
+                {% for slice in slice_row %}
+                  <th style="background-color:{{ slice.bg_color }};">
+                    <img src="{{ slice.img_slice.url }}" height="{{ img.slice_height }}">
+                    {{slice.result0}} <br>
+                    {{slice.result1}}<br>
+                    {{slice.result2}}<br>
+                  </th>
+                  {% for label_scores in labels_scores %}
+                  <th>
+                    {% for scores_row in label_scores %}
+                      {% for score in scores_row %}
+                      <div>
+                        {{ score }}
+                      </div>
+                      {% endfor %}
+                  </th>
+                    {% endfor %}
+                  {% endfor %}
+                {% endfor %}
+
+                {% for label_scores in labels_scores %}
+                <th>
+                  {% for scores_row in label_scores %}
+                    {% for score in scores_row %}
+                    <td align="right">
+                      {{ score }}
+                    </td>
+                    {% endfor %}
+                </th>
+                  {% endfor %}
+                {% endfor %}
+              </tr>
+              {% endfor %}
+              </table>
+              <form action="/predict/" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="submit" value="預測">
+              </form>
+              <!-- -------- -->
+            {% else %}
+            <hr>
+            <p>[{{ img.img_origin.name }}]</p>
+            <!--<img src="{{ img.img_origin.url }}" height="300"/>-->
+            <table class="table">
+              {% for slice_row in slice_table %}
+              <tr>
+                {% for slice in slice_row %}
+                <th style="background-color:{{ slice.bg_color }};">
+                  <img src="{{ slice.img_slice.url }}" height="{{ img.slice_height }}">
+                </th>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </table>
+            <form action="/predict/" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="submit" value="預測">
+            </form>
+            <!-- -------- -->
+            {% endif %}
+          {% endif %}
+          
+          <!-- 如果有預測結果可以顯示 -->
+          {% if show_prediction %}
+          <hr>      
+          <table>
+            <tr>
+              {% for label in labels %}
+                <th>{{ label }}</th>
+              {% endfor %}
+            </tr>
+            <tr>
+              {% for label_scores in labels_scores %}
+                <td>
+                <table style="border: 2px #cccccc solid;">
+                  {% for scores_row in label_scores %}
+                  <tr>
+                    {% for score in scores_row %}
+                    <td align="right">
+                      {{ score }}
+                    </td>
+                    {% endfor %}
+                  </tr>
+                  {% endfor %}
+                </table>
+              </td>
+              {% endfor %}
+            </tr>
+          </table>
+          
+          {% endif %}
+          </div>
+      <!-- //container -->
+    </div>
+    <!-- //welcome -->
+
+
+</body>
+</html>
